@@ -16,6 +16,7 @@ get(Path, Opts) ->
     Fetch = fun(URL, KEY) ->
         case {httpc_return, httpc:request(URL)} of
             {httpc_return, {ok, {{_,200,_}, _, Result}}} ->
+                io:format("Json= ~p~n", [ Result ]),
                 case {result, jiffy:decode(Result)} of
                     {result, {Proplist}} when is_list(Proplist) ->
                         cache:put({global, firebase_cache}, KEY, Proplist),
