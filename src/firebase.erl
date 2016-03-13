@@ -10,10 +10,11 @@ get(Path, Opts) ->
     AuthToken = gen_server:call(firebase_auth_srv, get_token),
     Shallow = proplists:get_value(shallow, Opts, false),
     Fresh = proplists:get_value(fresh, Opts, false),
-    FullUrl = lists:flatten(io_lib:format("~s/~s?auth=~s&shallow=~s",
+    FullUrl = lists:flatten(io_lib:format("~s/~s.json?auth=~s&shallow=~s",
         [Url, Path, AuthToken, Shallow])),
     Key = Url ++ Path ++ Shallow,
     Fetch = fun(URL, KEY) ->
+                io:format("URL= ~p~n", [ URL ]),
         case {httpc_return, httpc:request(URL)} of
             {httpc_return, {ok, {{_,200,_}, _, Result}}} ->
                 io:format("Json= ~p~n", [ Result ]),
